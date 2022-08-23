@@ -8,7 +8,7 @@ const refs = {
     input: document.querySelector(".feedback-form input")
 }
 
-const formData = {};
+let formData = {};
 
 populateTextarea()
 
@@ -18,17 +18,23 @@ refs.form.addEventListener("input", throttle(onInputForm, 500))
 function onInputForm(e){
    
     formData[e.target.name] = e.target.value;
-    console.log(formData);
-    let savedInput = JSON.stringify(formData)
-    localStorage.setItem(STORAGE_KEY,savedInput)
-}
+    const savedInput = JSON.stringify(formData);
+    localStorage.setItem(STORAGE_KEY,savedInput);
+};
 
 function onSubmitForm(e){
     e.preventDefault()
+    if(refs.textArea.value && refs.input.value){
+     console.log(JSON.parse(localStorage.getItem(STORAGE_KEY))); 
     e.currentTarget.reset();
     localStorage.removeItem(STORAGE_KEY);
-    console.log(formData)
     
+    // console.log(formData);
+    // formData ={};
+    return;
+    }
+    alert("Please input a Value");
+    return "";
 }
 
 
@@ -38,8 +44,9 @@ function populateTextarea() {
     
       if (savedMessage) {
         const objectMassege = JSON.parse(savedMessage)
+        formData = objectMassege
         console.log(objectMassege)
-        refs.textArea.value = objectMassege.message;
-        refs.input.value = objectMassege.email;
+        refs.textArea.value = objectMassege.message ? objectMassege.message : "";
+        refs.input.value = objectMassege.email ? objectMassege.email: "";
       }
     }
